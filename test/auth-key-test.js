@@ -1,7 +1,7 @@
 'use strict'
 
 const assert = require('assert')
-const BN = require('bn.js');
+const BN = require('../node_modules/bn.js/lib/bn');
 
 const Rand = require('@safeheron/crypto-rand')
 const EC = require('elliptic').ec;
