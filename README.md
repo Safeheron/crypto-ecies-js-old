@@ -10,8 +10,14 @@ npm install @safeheron/crypto-ecies --registry=https://npm.91aql.com
 ## ECIES
 - Encrypt a string
 ```javascript
+        import * as cryptoJS from "crypto-js"
+        import * as elliptic from 'elliptic'
+        import * as assert from 'assert'
+        import {Rand, Prime} from "@safeheron/crypto-rand"
+        const P256 = elliptic.ec('p256')
+        import {Hex, UrlBase64, CryptoJSBytes} from "@safeheron/crypto-utils"
         import {ECIES, AuthEnc, Authorize} from "@safeheron/crypto-ecies"
-
+        
         let priv = await Rand.randomBN(32)
         console.log('priv: ', priv.toString(16))
         let pub = P256.g.mul(priv)
@@ -25,8 +31,14 @@ npm install @safeheron/crypto-ecies --registry=https://npm.91aql.com
 
 - Encrypt bytes
 ```javascript
+        import * as cryptoJS from "crypto-js"
+        import * as elliptic from 'elliptic'
+        import * as assert from 'assert'
+        import {Rand, Prime} from "@safeheron/crypto-rand"
+        const P256 = elliptic.ec('p256')
+        import {Hex, UrlBase64, CryptoJSBytes} from "@safeheron/crypto-utils"
         import {ECIES, AuthEnc, Authorize} from "@safeheron/crypto-ecies"
-
+        
         let priv = await Rand.randomBN(32)
         console.log('priv: ', priv.toString(16))
         let pub = P256.g.mul(priv)
@@ -43,7 +55,14 @@ npm install @safeheron/crypto-ecies --registry=https://npm.91aql.com
 
 - Encrypt CryptoJSBytes
 ```javascript
+        import * as cryptoJS from "crypto-js"
+        import * as elliptic from 'elliptic'
+        import * as assert from 'assert'
+        import {Rand, Prime} from "@safeheron/crypto-rand"
+        const P256 = elliptic.ec('p256')
+        import {Hex, UrlBase64, CryptoJSBytes} from "@safeheron/crypto-utils"
         import {ECIES, AuthEnc, Authorize} from "@safeheron/crypto-ecies"
+        
         
         let priv = await Rand.randomBN(32)
         console.log('priv: ', priv.toString(16))
