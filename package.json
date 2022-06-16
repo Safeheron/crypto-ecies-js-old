@@ -17,7 +17,7 @@
   "license": "MIT",
   "author": "Max<hejh1500@gmail.com>",
   "files": [
-    "lib"
+    "dist"
   ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
