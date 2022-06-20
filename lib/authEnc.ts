@@ -1,7 +1,6 @@
 import * as BN from 'bn.js'
 import * as cryptoJS from "crypto-js"
 import * as elliptic from 'elliptic'
-import {Rand, Prime} from "@safeheron/crypto-rand"
 const P256 = elliptic.ec('p256')
 import {Hex, UrlBase64, CryptoJSBytes} from "@safeheron/crypto-utils"
 import {ECIES} from "./ecies"
@@ -16,7 +15,7 @@ export namespace AuthEnc {
      * @returns Promise<string> A string encoded in base64
      */
     export async function _encrypt(localAuthPriv: BN, remoteAuthPub: any, plain: string| number[]| CryptoJSBytes) : Promise<string>{
-        let plainBytes = null
+        let plainBytes
         if (typeof plain === 'string') {
             plainBytes = cryptoJS.enc.Utf8.parse(plain)
         } else if (plain instanceof Array) {
@@ -36,9 +35,9 @@ export namespace AuthEnc {
         let signatureBytes = cryptoJS.enc.Hex.parse(Hex.pad64(signature.r.toString(16)))
         signatureBytes.concat(cryptoJS.enc.Hex.parse(Hex.pad64(signature.s.toString(16))))
 
-        let sig_plain = plainBytes.concat(signatureBytes)
+        let sigPlain = plainBytes.concat(signatureBytes)
 
-        let cypherBytes = await ECIES.encryptCryptoJSBytes(remoteAuthPub, sig_plain)
+        let cypherBytes = await ECIES.encryptCryptoJSBytes(remoteAuthPub, sigPlain)
 
         return UrlBase64.fromCryptoJSBytes(cypherBytes)
     }
@@ -52,17 +51,17 @@ export namespace AuthEnc {
     export function _decrypt(localAuthPriv: BN, remoteAuthPub: any, cypher: string): [boolean, CryptoJSBytes] {
         let cypherBytes = UrlBase64.toCryptoJSBytes(cypher)
         //Decrypt
-        let sig_plain = ECIES.decryptCryptoJSBytes(localAuthPriv, cypherBytes)
-        let sig_plain_hex = cryptoJS.enc.Hex.stringify(sig_plain)
+        let sigPlain = ECIES.decryptCryptoJSBytes(localAuthPriv, cypherBytes)
+        let sigPlainHex = cryptoJS.enc.Hex.stringify(sigPlain)
 
         //signature(64 byte)
-        assert(sig_plain_hex.length > 128)
+        assert(sigPlainHex.length > 128)
 
-        let r = new BN(sig_plain_hex.substring(sig_plain_hex.length - 128, sig_plain_hex.length - 64), 16)
-        let s = new BN(sig_plain_hex.substring(sig_plain_hex.length - 64), 16)
+        let r = new BN(sigPlainHex.substring(sigPlainHex.length - 128, sigPlainHex.length - 64), 16)
+        let s = new BN(sigPlainHex.substring(sigPlainHex.length - 64), 16)
         let signature = {r: r, s: s}
 
-        let plainBytes = cryptoJS.enc.Hex.parse(sig_plain_hex.substring(0, sig_plain_hex.length - 128))
+        let plainBytes = cryptoJS.enc.Hex.parse(sigPlainHex.substring(0, sigPlainHex.length - 128))
 
         const sha256 = cryptoJS.algo.SHA256.create()
         sha256.update(plainBytes)
